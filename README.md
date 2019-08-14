@@ -1,5 +1,7 @@
 # Hyperlite
 
+[![install size](https://packagephobia.now.sh/badge?p=hyperlite)](https://packagephobia.now.sh/result?p=hyperlite)
+
 ```js
 const { Server } = require('hyperlite');
 

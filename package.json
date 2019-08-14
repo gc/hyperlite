@@ -1,15 +1,25 @@
 {
 	"name": "hyperlite",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Fast, light and simple HTTP server with no dependencies.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
+	"license": "MIT",
+	"readme": "README.md",
 	"scripts": {
 		"prepublishOnly": "npm run lint && npm run build",
 		"lint": "eslint --ext ts src --fix",
 		"build": "tsc -p .",
 		"dev": "tsc --watch -p ."
 	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:gc/hyperlite.git"
+	},
+	"keywords": [
+		"http",
+		"server"
+	],
 	"devDependencies": {
 		"@types/node": "^12.6.2",
 		"@typescript-eslint/eslint-plugin": "^1.11.0",
