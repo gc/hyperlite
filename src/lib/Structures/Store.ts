@@ -80,8 +80,6 @@ class Store extends Map {
 	}
 
 	public static async walk(store: any, directory: any = store.userDirectory): Promise<Piece[]> {
-		console.log('Walking...');
-
 		const files = await Util.walk(directory);
 
 		return Promise.all(
