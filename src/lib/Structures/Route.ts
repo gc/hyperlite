@@ -1,6 +1,6 @@
 import Piece from './Piece';
 
-import Util from '../Util';
+import { parse } from '../Util';
 import LiteServer from '../Server';
 import Store from './Store';
 import { RoutesOptions, ParsedRoute } from '../../types';
@@ -20,7 +20,7 @@ class Route extends Piece {
 	) {
 		super(server, store, file, directory, options);
 		this.route = server.apiPrefix + options.route;
-		this.parsed = Util.parse(this.route);
+		this.parsed = parse(this.route);
 		this.directory = directory;
 	}
 

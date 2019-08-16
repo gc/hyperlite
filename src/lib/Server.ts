@@ -1,13 +1,13 @@
 import { EventEmitter } from 'events';
-import { Server, ServerResponse, createServer, METHODS } from 'http';
+import { Server, createServer, METHODS } from 'http';
 import { Server as SecureServer, createServer as createSecureServer } from 'https';
 import { parse } from 'url';
 import { join } from 'path';
 
 import MiddlewareStore from './Structures/MiddlewareStore';
-import Util from './Util';
+import { split } from './Util';
 import RouteStore from './Structures/RouteStore';
-import { Request } from '../types';
+import { Request, Response } from '../types';
 
 interface ServerOptions {
 	port?: number;
@@ -53,14 +53,19 @@ class LiteServer extends EventEmitter {
 		this.routes.loadAll();
 	}
 
-	public async handler(request: Request, response: ServerResponse): Promise<void> {
+	public async handler(request: Request, response: Response): Promise<void> {
 		const info = parse(request.url, true);
-		const splitURL = Util.split(info.pathname);
+		const splitURL = split(info.pathname);
 		const route = this.routes.findRoute(request.method, splitURL);
 		request.path = info.pathname;
 		request.search = info.search;
 		request.query = info.query;
 		request.params = route && route.execute(splitURL);
+
+		response.status = (statusCode: number) => {
+			response.statusCode = statusCode;
+			return response;
+		};
 
 		try {
 			await this.middlewares.run(request, response, route);

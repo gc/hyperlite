@@ -1,6 +1,6 @@
 import { join, relative, sep } from 'path';
 
-import Util from '../Util';
+import { isClass, walk } from '../Util';
 import LiteServer from '../Server';
 import Piece from './Piece';
 
@@ -38,7 +38,7 @@ class Store extends Map {
 		let piece = null;
 		try {
 			const Piece = ((req: any) => req.default || req)(require(loc));
-			if (!Util.isClass(Piece)) throw new TypeError('The exported structure is not a class.');
+			if (!isClass(Piece)) throw new TypeError('The exported structure is not a class.');
 			piece = this.set(new Piece(this.server, this, file, directory));
 		} catch (error) {
 			console.error(error);
@@ -80,10 +80,10 @@ class Store extends Map {
 	}
 
 	public static async walk(store: any, directory: any = store.userDirectory): Promise<Piece[]> {
-		const files = await Util.walk(directory);
+		const files = await walk(directory);
 
 		return Promise.all(
-			files.map(file => store.load(directory, relative(directory, file).split(sep)))
+			files.map((file: string) => store.load(directory, relative(directory, file).split(sep)))
 		);
 	}
 }
