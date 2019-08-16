@@ -1,14 +1,17 @@
-import Piece from './Piece';
-import LiteServer from '../Server';
 import Store from './Store';
-import { MiddlewaresOptions, Response, Request } from '../../types';
+import Piece from './Piece';
+import Request from './LiteRequest';
+import Response from './LiteResponse';
 import Route from './Route';
+import Server from '../Server';
+
+import { MiddlewaresOptions } from '../../types';
 
 class Middleware extends Piece {
 	public priority: number;
 
 	public constructor(
-		server: LiteServer,
+		server: Server,
 		store: Store,
 		file: string[],
 		directory: string,

@@ -2,19 +2,19 @@ import { join } from 'path';
 
 import Store from './Store';
 import { pieceDefaults } from '../constants';
-import LiteServer from '../Server';
+import Server from '../Server';
 import { PieceOptions } from '../../types';
 
 class Piece {
 	public name: string;
 	public enabled: boolean;
-	public server: LiteServer;
+	public server: Server;
 	public store: Store;
 	public file: string[];
 	public directory: string;
 
 	public constructor(
-		server: LiteServer,
+		server: Server,
 		store: Store,
 		file: string[],
 		directory: string,

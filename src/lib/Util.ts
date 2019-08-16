@@ -1,7 +1,8 @@
 import { promises as fs } from 'fs';
 import { extname, join, resolve } from 'path';
 
-import { ParsedPart, Response } from '../types';
+import { ParsedPart } from '../types';
+import { Response } from '..';
 
 const [SLASH, COLON] = [47, 58];
 

@@ -1,27 +1,39 @@
 import { EventEmitter } from 'events';
-import { Server, createServer, METHODS } from 'http';
+import { Server, createServer, STATUS_CODES } from 'http';
 import { Server as SecureServer, createServer as createSecureServer } from 'https';
-import { parse } from 'url';
 import { join } from 'path';
 
 import MiddlewareStore from './Structures/MiddlewareStore';
-import { split } from './Util';
 import RouteStore from './Structures/RouteStore';
-import { Request, Response } from '../types';
+import Request from './Structures/LiteRequest';
+import Response from './Structures/LiteResponse';
 
 interface ServerOptions {
 	port?: number;
+	apiPrefix: string;
 	userBaseDirectory?: string;
-	sslOptions?: {
-		key: Buffer;
-		cert: Buffer;
+	serverOptions: {
+		key?: Buffer;
+		cert?: Buffer;
+		IncomingMessage: any;
+		ServerResponse: any;
+		Http1IncomingMessage: any;
+		Http1ServerResponse: any;
 	};
 }
 
-const defaultOptions = {
+const defaultOptions: ServerOptions = {
 	port: 3003,
 	userBaseDirectory: process.cwd(),
-	apiPrefix: ''
+	apiPrefix: '',
+	serverOptions: {
+		key: undefined,
+		cert: undefined,
+		IncomingMessage: Request,
+		ServerResponse: Response,
+		Http1IncomingMessage: Request,
+		Http1ServerResponse: Response
+	}
 };
 
 class LiteServer extends EventEmitter {
@@ -33,12 +45,15 @@ class LiteServer extends EventEmitter {
 
 	public constructor(options?: ServerOptions) {
 		super();
-		const { sslOptions, port, userBaseDirectory, apiPrefix } = {
+		const { port, userBaseDirectory, apiPrefix, serverOptions } = {
 			...defaultOptions,
 			...options
 		};
 
-		this.server = sslOptions ? createSecureServer(sslOptions) : createServer();
+		this.server = serverOptions.cert
+			? createSecureServer(serverOptions)
+			: createServer(serverOptions);
+
 		this.server.on('request', this.handler.bind(this));
 		this.server.listen(port);
 		this.userBaseDirectory = userBaseDirectory;
@@ -54,30 +69,22 @@ class LiteServer extends EventEmitter {
 	}
 
 	public async handler(request: Request, response: Response): Promise<void> {
-		const info = parse(request.url, true);
-		const splitURL = split(info.pathname);
-		const route = this.routes.findRoute(request.method, splitURL);
-		request.path = info.pathname;
-		request.search = info.search;
-		request.query = info.query;
-		request.params = route && route.execute(splitURL);
-
-		response.status = (statusCode: number) => {
-			response.statusCode = statusCode;
-			return response;
-		};
+		request.init(this);
 
 		try {
-			await this.middlewares.run(request, response, route);
-			if (route && METHODS.includes(request.method.toUpperCase())) {
-				route[request.method.toLowerCase()](request, response);
-			} else {
-				response.end(`Route not found ${splitURL}`);
-			}
+			await this.middlewares.run(request, response, request.route);
+			await (request.route
+				? request.execute(response)
+				: this.onError(404, request, response));
 		} catch (err) {
 			this.emit('error', err);
 			response.end();
 		}
+	}
+
+	onError(error: any, request: Request, response: Response) {
+		const code = (response.statusCode = error.code || error.status || error.statusCode || 500);
+		response.end((error.length && error) || error.message || STATUS_CODES[code]);
 	}
 }
 

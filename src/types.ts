@@ -1,21 +1,3 @@
-import { IncomingMessage, ServerResponse } from 'http';
-
-export interface Request extends IncomingMessage {
-	originalUrl: string;
-	path: string;
-	search: string;
-	query: Record<string, string | string[]>;
-	params?: Record<string, any>;
-	body?: any;
-	length?: number;
-	method: HTTPMethod;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Response extends ServerResponse {
-	status(statusCode: number): this;
-}
-
 export interface PieceOptions {
 	enabled?: boolean;
 	name?: string;

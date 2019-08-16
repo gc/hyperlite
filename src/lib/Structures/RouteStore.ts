@@ -1,13 +1,13 @@
 import { METHODS } from 'http';
-import Store from './Store';
 
+import Store from './Store';
 import Route from './Route';
 import Piece from './Piece';
-import LiteServer from '../Server';
+import Server from '../Server';
 
 class RouteStore extends Store {
 	public registry: Record<string, Map<string, Route>>;
-	public constructor(server: LiteServer) {
+	public constructor(server: Server) {
 		super(server, 'routes', Route);
 
 		this.registry = {};
@@ -15,10 +15,11 @@ class RouteStore extends Store {
 		for (const method of METHODS) this.registry[method] = new Map();
 	}
 
-	public findRoute(method: string, splitURL: string[]): void | Route {
+	public findRoute(method: string, splitURL: string[]): null | Route {
 		for (const route of this.registry[method].values()) {
 			if (route.matches(splitURL)) return route;
 		}
+		return null;
 	}
 
 	public clear(): void {

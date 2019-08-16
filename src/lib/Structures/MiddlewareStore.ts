@@ -1,12 +1,13 @@
 import Store from './Store';
 import Middleware from './Middleware';
-import LiteServer from '../Server';
-import { Request, Response } from '../../types';
+import Request from './LiteRequest';
+import Response from './LiteResponse';
 import Route from './Route';
+import Server from '../Server';
 
 class MiddlewareStore extends Store {
 	public sortedMiddlewares: Middleware[];
-	public constructor(server: LiteServer) {
+	public constructor(server: Server) {
 		super(server, 'middlewares', Middleware);
 
 		this.sortedMiddlewares = [];

@@ -4,7 +4,7 @@ import { isClass, walk } from '../Util';
 import LiteServer from '../Server';
 import Piece from './Piece';
 
-class Store extends Map {
+export default class Store extends Map {
 	public coreDirectories: Set<string>;
 	public server: LiteServer;
 	public name: string;
@@ -87,5 +87,3 @@ class Store extends Map {
 		);
 	}
 }
-
-export default Store;

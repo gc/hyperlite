@@ -1,10 +1,7 @@
-import LiteServer from '../../lib/Server';
-import Store from '../../lib/Structures/Store';
-import { Request, Response } from '../../types';
-import Middleware from '../../lib/Structures/Middleware';
+import { Middleware, Store, Request, Response, Server } from '../../';
 
 export default class extends Middleware {
-	public constructor(server: LiteServer, store: Store, file: string[], directory: string) {
+	public constructor(server: Server, store: Store, file: string[], directory: string) {
 		super(server, store, file, directory, { priority: 90 });
 	}
 
