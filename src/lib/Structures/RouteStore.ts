@@ -15,11 +15,11 @@ class RouteStore extends Store {
 		for (const method of METHODS) this.registry[method] = new Map();
 	}
 
-	public findRoute(method: string, splitURL: string[]): null | Route {
+	public findRoute(method: string, splitURL: string[]): undefined | Route {
 		for (const route of this.registry[method].values()) {
 			if (route.matches(splitURL)) return route;
 		}
-		return null;
+		return undefined;
 	}
 
 	public clear(): void {

@@ -10,15 +10,15 @@ import Response from './Structures/LiteResponse';
 
 interface ServerOptions {
 	port?: number;
-	apiPrefix: string;
+	apiPrefix?: string;
 	userBaseDirectory?: string;
-	serverOptions: {
+	serverOptions?: {
 		key?: Buffer;
 		cert?: Buffer;
-		IncomingMessage: any;
-		ServerResponse: any;
-		Http1IncomingMessage: any;
-		Http1ServerResponse: any;
+		IncomingMessage?: any;
+		ServerResponse?: any;
+		Http1IncomingMessage?: any;
+		Http1ServerResponse?: any;
 	};
 }
 
@@ -77,8 +77,9 @@ class LiteServer extends EventEmitter {
 				? request.execute(response)
 				: this.onError(404, request, response));
 		} catch (err) {
+			console.error(err);
 			this.emit('error', err);
-			response.end();
+			this.onError(err, request, response);
 		}
 	}
 

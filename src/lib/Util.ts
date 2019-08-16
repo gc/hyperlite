@@ -2,7 +2,6 @@ import { promises as fs } from 'fs';
 import { extname, join, resolve } from 'path';
 
 import { ParsedPart } from '../types';
-import { Response } from '..';
 
 const [SLASH, COLON] = [47, 58];
 
@@ -56,13 +55,3 @@ export async function walk(dir: string, filelist: string[] = []): Promise<string
 
 	return filelist.map((file: string): string => resolve(dir, file));
 }
-
-export const serverError = (err: Error, res: Response) => {
-	console.error(err);
-	res.statusCode = 500;
-	if (process.env.NODE_ENV === 'production') {
-		res.end('Internal Server Error');
-	} else {
-		res.end(err.stack);
-	}
-};
