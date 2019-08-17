@@ -83,7 +83,7 @@ class LiteServer extends EventEmitter {
 		}
 	}
 
-	onError(error: any, request: Request, response: Response) {
+	public onError(error: any, request: Request, response: Response) {
 		const code = (response.statusCode = error.code || error.status || error.statusCode || 500);
 		response.end((error.length && error) || error.message || STATUS_CODES[code]);
 	}

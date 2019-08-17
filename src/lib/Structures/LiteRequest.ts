@@ -18,7 +18,7 @@ export default class LiteRequest extends IncomingMessage {
 	public method: HTTPMethod;
 	public route?: Route;
 
-	constructor(socket: Socket) {
+	public constructor(socket: Socket) {
 		super(socket);
 
 		this.originalUrl = null;
@@ -30,11 +30,11 @@ export default class LiteRequest extends IncomingMessage {
 		this.body = null;
 	}
 
-	execute(response: any) {
+	public execute(response: any) {
 		return this.route[this.method.toLowerCase()](this, response);
 	}
 
-	init(server: LiteServer) {
+	public init(server: LiteServer) {
 		const info = parse(this.url, true);
 		this.originalUrl = this.originalUrl || this.url;
 		this.path = info.pathname;

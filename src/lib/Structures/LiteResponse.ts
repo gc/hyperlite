@@ -1,12 +1,12 @@
 import { ServerResponse } from 'http';
 
 export default class LiteServerResponse extends ServerResponse {
-	status(code: number) {
+	public status(code: number): this {
 		this.statusCode = code;
 		return this;
 	}
 
-	json(data: any) {
+	public json(data: any): void {
 		return this.end(JSON.stringify(data));
 	}
 }
