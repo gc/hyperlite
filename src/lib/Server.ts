@@ -73,19 +73,21 @@ class LiteServer extends EventEmitter {
 
 		try {
 			await this.middlewares.run(request, response, request.route);
-			await (request.route
-				? request.execute(response)
-				: this.onError(404, request, response));
+			await (request.route ? request.execute(response) : response.error(404));
 		} catch (err) {
 			console.error(err);
 			this.emit('error', err);
-			this.onError(err, request, response);
+			this.error(response, 500, err);
 		}
 	}
 
-	public onError(error: any, request: Request, response: Response) {
-		const code = (response.statusCode = error.code || error.status || error.statusCode || 500);
-		response.end((error.length && error) || error.message || STATUS_CODES[code]);
+	public error(response: Response, statusCode: number = 500, error?: any) {
+		response.status(statusCode);
+		if (process.env.NODE_ENV === 'production') {
+			response.end((error.toString && error.toString()) || STATUS_CODES[statusCode]);
+		} else {
+			response.end(STATUS_CODES[statusCode]);
+		}
 	}
 }
 
