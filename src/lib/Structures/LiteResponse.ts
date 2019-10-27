@@ -6,11 +6,18 @@ export default class LiteServerResponse extends ServerResponse {
 		return this;
 	}
 
+	public setHeader(headerName: string, headerValue: string) {
+		this.setHeader('Content-Type', 'application/json');
+		return this;
+	}
+
 	public json(data: any): void {
-		this.end(JSON.stringify(data));
+		this.status(200)
+			.setHeader('Content-Type', 'application/json')
+			.end(JSON.stringify(data));
 	}
 
 	public error(code: number): void {
-		this.status(code).end(STATUS_CODES[code]);
+		return this.status(code).end(STATUS_CODES[code]);
 	}
 }
