@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Server, createServer, STATUS_CODES } from 'http';
+import { Server, createServer } from 'http';
 import { Server as SecureServer, createServer as createSecureServer } from 'https';
 import { join } from 'path';
 
