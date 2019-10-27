@@ -1,6 +1,6 @@
 {
 	"name": "hyperlite",
-	"version": "0.3.1",
+	"version": "0.3.3",
 	"description": "Fast, light and simple HTTP server with no dependencies.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

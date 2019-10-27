@@ -77,7 +77,11 @@ class LiteServer extends EventEmitter {
 
 		try {
 			await this.middlewares.run(request, response, request.route);
-			await (request.route ? request.execute(response) : response.error(404));
+			if (request.route) {
+				await request.execute(response);
+			} else if (!response.finished) {
+				response.error(404);
+			}
 		} catch (err) {
 			this.emit('error', err);
 			response.error(500);

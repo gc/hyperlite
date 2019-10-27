@@ -7,7 +7,7 @@ export default class LiteServerResponse extends ServerResponse {
 	}
 
 	public setHeader(headerName: string, headerValue: string) {
-		this.setHeader('Content-Type', 'application/json');
+		super.setHeader(headerName, headerValue);
 		return this;
 	}
 
