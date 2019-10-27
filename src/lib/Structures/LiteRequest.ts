@@ -31,6 +31,7 @@ export default class LiteRequest extends IncomingMessage {
 	}
 
 	public execute(response: any) {
+		if (response.finished) return;
 		return this.route[this.method.toLowerCase()](this, response);
 	}
 
