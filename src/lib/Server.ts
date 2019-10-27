@@ -42,6 +42,7 @@ class LiteServer extends EventEmitter {
 	public routes: RouteStore;
 	public apiPrefix: string;
 	public userBaseDirectory: string;
+	public port: number;
 
 	public constructor(options?: ServerOptions) {
 		super();
@@ -50,6 +51,7 @@ class LiteServer extends EventEmitter {
 			...options
 		};
 
+		this.port = port;
 		this.server = serverOptions.cert
 			? createSecureServer(serverOptions)
 			: createServer(serverOptions);
@@ -66,6 +68,8 @@ class LiteServer extends EventEmitter {
 
 		this.middlewares.loadAll();
 		this.routes.loadAll();
+
+		this.emit('ready', this);
 	}
 
 	public async handler(request: Request, response: Response): Promise<void> {
@@ -75,18 +79,8 @@ class LiteServer extends EventEmitter {
 			await this.middlewares.run(request, response, request.route);
 			await (request.route ? request.execute(response) : response.error(404));
 		} catch (err) {
-			console.error(err);
 			this.emit('error', err);
-			this.error(response, 500, err);
-		}
-	}
-
-	public error(response: Response, statusCode: number = 500, error?: any) {
-		response.status(statusCode);
-		if (process.env.NODE_ENV === 'production') {
-			response.end((error.toString && error.toString()) || STATUS_CODES[statusCode]);
-		} else {
-			response.end(STATUS_CODES[statusCode]);
+			response.error(500);
 		}
 	}
 }
